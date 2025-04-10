@@ -10,11 +10,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 
-	"tasker3/internal/api"
-	"tasker3/internal/config"
-	customLogger "tasker3/internal/logger"
-	"tasker3/internal/repo"
-	"tasker3/internal/service"
+	"github.com/vitalikir156/tasker3/internal/api"
+	"github.com/vitalikir156/tasker3/internal/config"
+	customLogger "github.com/vitalikir156/tasker3/internal/logger"
+	"github.com/vitalikir156/tasker3/internal/repo"
+	"github.com/vitalikir156/tasker3/internal/service"
 
 	"github.com/joho/godotenv"
 )

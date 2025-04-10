@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 
-	"tasker3/internal/api/middleware"
-	"tasker3/internal/service"
+	"github.com/vitalikir156/tasker3/internal/api/middleware"
+	"github.com/vitalikir156/tasker3/internal/service"
 )
 
 // Routers - структура для хранения зависимостей роутов
@@ -30,7 +30,11 @@ func NewRouters(r *Routers, token string) *fiber.App {
 	apiGroup := app.Group("/v1", middleware.Authorization(token))
 
 	// Роут для создания задачиinternal/config/config.gointernal/config/config.go
-	apiGroup.Post("/create_task", r.Service.CreateTask)
-	apiGroup.Get("/task/:id", r.Service.GetTask)
+	apiGroup.Post("/tasks", r.Service.CreateTask)
+	apiGroup.Get("/tasks", r.Service.GetTasks)
+	apiGroup.Get("/tasks/:id", r.Service.GetTask)
+	apiGroup.Put("/tasks/:id", r.Service.UpdateTask)
+	apiGroup.Delete("/tasks/:id", r.Service.DeleteTask)
+
 	return app
 }
