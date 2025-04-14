@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/vitalikir156/tasker3/internal/dto"
 	"github.com/vitalikir156/tasker3/internal/repo"
 	"github.com/vitalikir156/tasker3/pkg/validator"
@@ -47,8 +48,8 @@ func (s *service) GetTask(ctx *fiber.Ctx) error { //GetTask
 	}
 	task, err := s.repo.GetTask(ctx.Context(), id)
 	if err != nil {
-		s.log.Error("Failed to delete task", zap.Error(err))
-		if errors.Is(err, repo.ErrTaskNotFound){
+		s.log.Info("Failed to get task", zap.Error(err))
+		if errors.Is(err, pgx.ErrNoRows){
 			return ctx.Status(fiber.StatusNotFound).SendString("task with ID not found")
 		}
 		return dto.InternalServerError(ctx)
@@ -79,11 +80,19 @@ func (s *service) CreateTask(ctx *fiber.Ctx) error {
 	if vErr := validator.Validate(ctx.Context(), req); vErr != nil {
 		return dto.BadResponseError(ctx, dto.FieldIncorrect, vErr.Error())
 	}
-
+	if len(req.UID)==0{s.log.Error("Empty UID")
+	return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")}
+	uid, err:=strconv.Atoi(req.UID)
+	if err != nil {
+		s.log.Error("Failed to convert UID", zap.Error(err))
+		return dto.InternalServerError(ctx)
+	}
 	// Вставка задачи в БД через репозиторий
 	task := repo.Task{
 		Title:       req.Title,
 		Description: req.Description,
+		Status: req.Status,
+		UID: uid,
 	}
 	taskID, err := s.repo.CreateTask(ctx.Context(), task)
 	if err != nil {
@@ -117,13 +126,18 @@ func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 	if vErr := validator.Validate(ctx.Context(), req); vErr != nil {
 		return dto.BadResponseError(ctx, dto.FieldIncorrect, vErr.Error())
 	}
-
+	uid, err:=strconv.Atoi(req.UID)
+	if err != nil {
+		s.log.Error("Failed to convert UID", zap.Error(err))
+		return dto.InternalServerError(ctx)
+	}
 	// Вставка задачи в БД через репозиторий
 	task := repo.Task{
 		Title:       req.Title,
 		Description: req.Description,
 		Status: req.Status,
 		ID: id,
+		UID: uid,
 	}
 	err = s.repo.UpdateTask(ctx.Context(), task)
 	if err != nil {

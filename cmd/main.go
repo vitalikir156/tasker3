@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/signal"
@@ -43,8 +44,11 @@ func main() {
 		log.Fatal(errors.Wrap(err, "error initializing logger"))
 	}
 
-	// Создаём in-memory DB
-	repository := repo.NewRepository()
+
+	repository, err := repo.NewRepository(context.Background(), cfg.PostgreSQL)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to initialize repository"))
+	}
 
 	// Создание сервиса с бизнес-логикой
 	serviceInstance := service.NewService(repository, logger)
