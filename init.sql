@@ -1,7 +1,10 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     uname TEXT NOT NULL,
-    priv TEXT
+    taskread boolean,
+    taskwrite boolean,
+    userread boolean,
+    userwrite boolean
 );
 CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,

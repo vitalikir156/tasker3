@@ -7,21 +7,18 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
-
 	"github.com/vitalikir156/tasker3/internal/api"
 	"github.com/vitalikir156/tasker3/internal/config"
 	customLogger "github.com/vitalikir156/tasker3/internal/logger"
 	"github.com/vitalikir156/tasker3/internal/repo"
 	"github.com/vitalikir156/tasker3/internal/service"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-
 	loadenv := pflag.BoolP("loadenv", "e", false, "load .env file")
 	pflag.Parse()
 
@@ -43,7 +40,6 @@ func main() {
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error initializing logger"))
 	}
-
 
 	repository, err := repo.NewRepository(context.Background(), cfg.PostgreSQL)
 	if err != nil {
