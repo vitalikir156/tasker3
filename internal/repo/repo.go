@@ -1,5 +1,6 @@
 package repo
 
+//go:generate mockery --name Repository
 import (
 	"context"
 	"fmt"

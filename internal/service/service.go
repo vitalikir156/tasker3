@@ -64,6 +64,7 @@ func (s *service) GetTask(ctx *fiber.Ctx) error { // GetTask
 		}
 		return dto.InternalServerError(ctx)
 	}
+
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
 		s.log.Error("Invalid request", zap.Error(err))
@@ -145,7 +146,6 @@ func (s *service) CreateTask(ctx *fiber.Ctx) error {
 		s.log.Error("Invalid request body", zap.Error(err))
 		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")
 	}
-
 	// Валидация входных данных
 	if vErr := validator.Validate(ctx.Context(), req); vErr != nil {
 		return dto.BadResponseError(ctx, dto.FieldIncorrect, vErr.Error())
@@ -196,6 +196,7 @@ func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 	if vErr := validator.Validate(ctx.Context(), req); vErr != nil {
 		return dto.BadResponseError(ctx, dto.FieldIncorrect, vErr.Error())
 	}
+	if len(req.UID)<1{return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")}
 	uid, err := strconv.Atoi(req.UID)
 	if err != nil {
 		s.log.Error("Failed to convert UID", zap.Error(err))
@@ -228,6 +229,7 @@ func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 	taskwrite := false
 	if user.Taskwrite != nil {
 		taskwrite = *user.Taskwrite
+
 	}
 	if userid != taskread.UID && !taskwrite { // если не собственник и без прав на запись
 		s.log.Infof("Acces denied from user %v to task %v", uid, taskread.UID)
