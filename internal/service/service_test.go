@@ -39,11 +39,10 @@ func TestCreateTaskGood(t *testing.T) {
 	task := TaskRequest{
 			Title:       "Test Task",
 			Description: "Test Description",
-			UID: "1",
 			Userrequest: Userrequest{UserID: "1"},
 		}
 		body, _ := json.Marshal(task)
-		uid, _ := strconv.Atoi(task.UID)
+		uid, _ := strconv.Atoi(task.UserID)
 		// Ожидаем, что вызов метода `CreateTask` в репозитории вернёт ID = 1
 		mockRepo.On("CreateTask", mock.Anything, repo.Task{
 			Title:       task.Title,
@@ -101,7 +100,6 @@ func TestCreateTaskRepoFail(t *testing.T) {
 	task := TaskRequest{
 		Title:       "Test Task",
 		Description: "Test Description",
-		UID: "1",
 		Userrequest: Userrequest{UserID: "1"},
 	}
 	body, _ := json.Marshal(task)

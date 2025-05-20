@@ -150,10 +150,10 @@ func (s *service) CreateTask(ctx *fiber.Ctx) error {
 	if vErr := validator.Validate(ctx.Context(), req); vErr != nil {
 		return dto.BadResponseError(ctx, dto.FieldIncorrect, vErr.Error())
 	}
-	if len(req.UID) == 0 {
-		req.UID = req.UserID
+	if len(req.UserID) == 0 {
+		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Empty UserID field")
 	}
-	uid, err := strconv.Atoi(req.UID)
+	uid, err := strconv.Atoi(req.UserID)
 	if err != nil {
 		s.log.Error("Failed to convert UID", zap.Error(err))
 		return dto.InternalServerError(ctx)
@@ -196,8 +196,8 @@ func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 	if vErr := validator.Validate(ctx.Context(), req); vErr != nil {
 		return dto.BadResponseError(ctx, dto.FieldIncorrect, vErr.Error())
 	}
-	if len(req.UID)<1{return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")}
-	uid, err := strconv.Atoi(req.UID)
+	if len(req.UserID)<1{return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")}
+	uid, err := strconv.Atoi(req.UserID)
 	if err != nil {
 		s.log.Error("Failed to convert UID", zap.Error(err))
 		return dto.InternalServerError(ctx)
