@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+ 
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: tasker
+      TZ: GMT-3
+      PGTZ: GMT-3
+    ports:
+      - 5555:5555
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    command: -p 5555
+
